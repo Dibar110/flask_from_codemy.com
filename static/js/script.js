@@ -1,0 +1,1 @@
+document.getElementById('picture_discription').innerHTML = 'Such clever and strong man!!!'

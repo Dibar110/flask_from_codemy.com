@@ -3,5 +3,8 @@
 {% block content %}
     <center>
         <h1>Hello {{name}}</h1>
+        <img src="{{ url_for('static', filename='images/img102.jpg') }}" width="700px" alt="">
+        <p id="picture_discription"></p>
+        <script src="{{url_for('static', filename='js/script.js')}}"></script>
     </center>
 {% endblock %}
