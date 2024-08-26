@@ -2,36 +2,37 @@
 
 {% block content %}
     <!-- <center> -->
-        {% if name %}
-            <h1>Hello {{name}}!</h1>
+        <!-- {% if name %} -->
+            <!-- <h1>Hello {{name}}!</h1>
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong> {{ message }}</strong> 
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-            {% endfor %}
-        {% else %}
+            {% endfor %} -->
+        <!-- {% else %} -->
+        <h1>Update User...</h1>
             <br/>
             <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-                <form action="" method="POST">
+                <form action="/update/{{name_to_update.id}}" method="POST">
                     {{ form.hidden_tag() }}
                     {{ form.name.label(class='form-label') }}
-                    {{ form.name(class='form-control') }}
+                    {{ form.name(class='form-control', value=name_to_update.name) }}
                     {{ form.email.label(class='form-label') }}
-                    {{ form.email(class='form-control') }}
+                    {{ form.email(class='form-control', value=name_to_update.email) }}
                     <br/>
                     {{ form.submit(class='btn btn-primary') }}
                 </form>
             </div>
-        {% endif %}
-        <table class="table table-striped">
+        <!-- {% endif %} -->
+        <!-- <table class="table table-striped">
             {% for user in all_users %}
             <tr>
                 <td>
-                    {{user.id}} - <a href="{{ url_for('update', id=user.id) }}">{{user.name}}</a> - {{user.email}}
+                    {{user.id}} - {{user.name}} - {{user.email}}
                 </td>
             </tr>
             {% endfor %}
-        </table>
+        </table> -->
     <!-- </center> -->
 {% endblock %}
