@@ -20,19 +20,21 @@
                     {{ form.name(class='form-control', value=name_to_update.name) }}
                     {{ form.email.label(class='form-label') }}
                     {{ form.email(class='form-control', value=name_to_update.email) }}
+                    {{ form.favorite_color.label(class='form-label') }}
+                    {{ form.favorite_color(class='form-control', value=name_to_update.favorite_color) }}
                     <br/>
                     {{ form.submit(class='btn btn-primary') }}
                 </form>
             </div>
         <!-- {% endif %} -->
-        <!-- <table class="table table-striped">
+        <table class="table table-striped">
             {% for user in all_users %}
             <tr>
                 <td>
-                    {{user.id}} - {{user.name}} - {{user.email}}
+                    {{user.id}} - {{user.name}} - {{user.email}} - {{user.favorite_color}}
                 </td>
             </tr>
             {% endfor %}
-        </table> -->
+        </table>
     <!-- </center> -->
 {% endblock %}
