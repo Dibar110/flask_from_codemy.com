@@ -100,4 +100,18 @@ def update(id):
             flash('Error!')
             return render_template('update.html', form=form, name_to_update=name_to_update)
     else:
-        return render_template('update.html', form=form, name_to_update=name_to_update)
+        return render_template('update.html', form=form, name_to_update=name_to_update, id=id)
+    
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        all_users = Users.query.order_by(Users.date_added)
+        return render_template('add_user.html', form=form, name=name, all_users=all_users)
+    except:
+        flash("Error to delete user.")
+        return render_template('add_user.html', form=form, name=name, all_users=all_users)
