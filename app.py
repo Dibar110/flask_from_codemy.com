@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
+from wtforms.widgets import TextArea
 
 app = Flask(__name__)
 
@@ -17,6 +19,39 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    slug = db.Column(db.String(255))
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = StringField('Content', validators=[DataRequired()], widget=TextArea())
+    author = StringField('Author', validators=[DataRequired()])
+    slug = StringField('Slug', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+@app.route('/add-post', methods=['GET', 'POST'])
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Posts(title = form.title.data, content=form.content.data, author=form.author.data, slug=form.slug.data)
+
+        form.title.data = ''
+        form.content.data = ''
+        form.author.data = ''
+        form.slug.data = ''
+
+        db.session.add(post)
+        db.session.commit()
+
+        flash('Blog Post Submitted Successfully!')
+    posts = Posts.query.order_by(Posts.date_posted)
+    return render_template('add_post.html', form=form, posts=posts)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -160,3 +195,13 @@ def test_password():
 
         passed = check_password_hash(user_to_check.password_hash, password)
     return render_template('test_password.html', name=name, email=email, password=password, user_to_check=user_to_check, passed=passed, form=form)
+
+@app.route('/date')
+def get_current_date():
+    name_color = {
+        'Dima' : 'green',
+        'Nasta' : 'blue',
+        'Tania' : 'rose'
+    }
+   # return {'Date' : date.today()}
+    return name_color
