@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, request
+from flask import Flask, render_template, url_for, flash, request, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, EqualTo, Length
@@ -40,6 +40,11 @@ def posts():
     posts = Posts.query.order_by(Posts.date_posted)
     return render_template('posts.html', posts=posts)
 
+@app.route('/posts/<int:id>')
+def post(id):
+    post = Posts.query.get_or_404(id)
+    return render_template('post.html', post=post, id=id)
+
 @app.route('/add-post', methods=['GET', 'POST'])
 def add_post():
     form = PostForm()
@@ -57,6 +62,42 @@ def add_post():
         flash('Blog Post Submitted Successfully!')
     posts = Posts.query.order_by(Posts.date_posted)
     return render_template('add_post.html', form=form, posts=posts)
+
+@app.route('/posts/delete/<int:id>')
+def delete_post(id):
+    post_to_delete = Posts.query.get_or_404(id)
+
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        flash('Post was deleted successfully!')
+        posts = Posts.query.order_by(Posts.date_posted)
+        return render_template('posts.html', posts=posts)
+    except:
+        flash('Something went wrong!')
+        posts = Posts.query.order_by(Posts.date_posted)
+        return render_template('posts.html', posts=posts)
+
+@app.route('/posts/edit/<int:id>', methods=['GET', 'POST'])
+def edit_post(id):
+    form = PostForm()
+    post = Posts.query.get_or_404(id)
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.author = form.author.data
+        post.slug = form.slug.data
+        post.content = form.content.data
+
+        db.session.add(post)
+        db.session.commit()
+
+        flash('Post Has Been Updated Successfully!')
+        return redirect(url_for('post', id=post.id))
+    form.title.data = post.title
+    form.author.data = post.author
+    form.slug.data = post.slug
+    form.content.data = post.content
+    return render_template('edit_post.html', form=form)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
