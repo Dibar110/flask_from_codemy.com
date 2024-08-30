@@ -17,6 +17,8 @@
                     {{ form.hidden_tag() }}
                     {{ form.name.label(class='form-label') }}
                     {{ form.name(class='form-control') }}
+                    {{ form.username.label(class='form-label') }}
+                    {{ form.username(class='form-control') }}
                     {{ form.email.label(class='form-label') }}
                     {{ form.email(class='form-control') }}
                     {{ form.favorite_color.label(class='form-label') }}
@@ -34,7 +36,7 @@
             {% for user in all_users %}
             <tr>
                 <td>
-                    {{user.id}} - <a href="{{ url_for('update', id=user.id) }}">{{user.name}}</a> - {{user.email}} - {{user.favorite_color}} - Password: {{ user.password_hash }} - <a href="{{ url_for('delete', id=user.id) }}">Delete</a>
+                    {{user.id}} - <a href="{{ url_for('update', id=user.id) }}">{{user.name}}</a> - {{user.username}} - {{user.email}} - {{user.favorite_color}} - Password: {{ user.password_hash }} - <a href="{{ url_for('delete', id=user.id) }}">Delete</a>
                 </td>
             </tr>
             {% endfor %}
