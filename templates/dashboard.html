@@ -9,10 +9,34 @@
         </div>
     {% endfor %}
     <br/>
+
+    <div class="card">
+        <div class="card-header">
+            {{ current_user.name }}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Welcome to your dashboard!</h5>
+          <p class="card-text"><strong>Name: </strong>{{ current_user.name }}<br>
+            <strong>Username: </strong>{{ current_user.username }}<br>
+            <strong>Email: </strong>{{ current_user.email }}<br>
+            <strong>Favorite color: </strong>{{ current_user.favorite_color }}<br>
+            <strong>Date joined: </strong>{{ current_user.date_added }}<br>
+         </p>
+          <a href="{{url_for('logout')}}" class="btn btn-secondary btn-sm">Logout</a>
+        </div>
+      </div>
+    <br>
     <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-        <h1>Dashboard</h1>
-        <h3>You are logged in!</h3>
-        <a href="{{url_for('logout')}}">Logout</a>
+        <!-- <h1>Dashboard</h1> -->
+        <!-- <h3>You are logged in!</h3> -->
+         <br/>
+         <strong>Name: </strong>{{ current_user.name }}<br>
+         <strong>Username: </strong>{{ current_user.username }}<br>
+         <strong>Email: </strong>{{ current_user.email }}<br>
+         <strong>Favorite color: </strong>{{ current_user.favorite_color }}<br>
+         <strong>Date joined: </strong>{{ current_user.date_added }}<br>
+         
+        <!-- <a href="{{url_for('logout')}}">Logout</a> -->
     </div>
 
 {% endblock %}

@@ -55,6 +55,7 @@ def post(id):
     return render_template('post.html', post=post, id=id)
 
 @app.route('/add-post', methods=['GET', 'POST'])
+
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
