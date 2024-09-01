@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <!-- <center> -->
-        <!-- {% if name %} -->
-            <!-- <h1>Hello {{name}}!</h1>
-            {% for message in get_flashed_messages() %}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong> {{ message }}</strong> 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %} -->
-        <!-- {% else %} -->
+    
         <h1>Update User...</h1>
+        <h3>ID to update: {{ id }}</h3>
+        <h3>Current ID: {{ current_user.id }}</h3>
+
+        {% if id == current_user.id %}
             <br/>
             <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
                 <form action="/update/{{name_to_update.id}}" method="POST">
@@ -29,7 +24,13 @@
                     <a href="{{url_for('delete', id=id)}}" class="btn btn-danger">Delete</a>
                 </form>
             </div>
-        <!-- {% endif %} -->
+        {% else %}
+            <br>
+            <h3 style="color:red;">Access denied!</h3>
+            <h3 style="color:red;">You can't update this user!</h3>
+            <br>
+        {% endif %}
+
         <table class="table table-striped">
             {% for user in all_users %}
             <tr>
@@ -39,5 +40,5 @@
             </tr>
             {% endfor %}
         </table>
-    <!-- </center> -->
+
 {% endblock %}

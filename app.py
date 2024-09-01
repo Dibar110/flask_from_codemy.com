@@ -205,9 +205,11 @@ def get_name():
 
 #Update Database Record
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
+@login_required
 def update(id):
     form = UserForm()
     name_to_update = Users.query.get_or_404(id)
+    all_users = Users.query.order_by(Users.date_added)
     if request.method == 'POST':
         name_to_update.name = request.form['name']
         name_to_update.username = request.form['username']
@@ -216,13 +218,13 @@ def update(id):
         try:
             db.session.commit()
             flash('User Updated Successfully!')
-            return render_template('dashboard.html', form=form, name_to_update=name_to_update, id=id)
+            return render_template('dashboard.html', form=form, name_to_update=name_to_update, all_users=all_users, id=id)
         except:
             db.session.commit()
             flash('Error!')
             return render_template('update.html', form=form, name_to_update=name_to_update)
     else:
-        return render_template('update.html', form=form, name_to_update=name_to_update, id=id)
+        return render_template('update.html', form=form, name_to_update=name_to_update, all_users=all_users, id=id)
     
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
