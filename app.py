@@ -26,16 +26,6 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return Users.query.get(user_id)
 
-class Posts(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    content = db.Column(db.Text)
-    author = db.Column(db.String(255))
-    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
-    slug = db.Column(db.String(255))
-
-
-
 @app.route('/posts')
 def posts():
     posts = Posts.query.order_by(Posts.date_posted)
@@ -51,7 +41,8 @@ def post(id):
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Posts(title = form.title.data, content=form.content.data, author=form.author.data, slug=form.slug.data)
+        user = current_user.id
+        post = Posts(title = form.title.data, content=form.content.data, user_id=user, slug=form.slug.data)
 
         form.title.data = ''
         form.content.data = ''
@@ -86,8 +77,9 @@ def edit_post(id):
     form = PostForm()
     post = Posts.query.get_or_404(id)
     if form.validate_on_submit():
+        user = current_user.id
         post.title = form.title.data
-        post.author = form.author.data
+        #post.author = form.author.data
         post.slug = form.slug.data
         post.content = form.content.data
 
@@ -97,35 +89,10 @@ def edit_post(id):
         flash('Post Has Been Updated Successfully!')
         return redirect(url_for('post', id=post.id))
     form.title.data = post.title
-    form.author.data = post.author
+    #form.author.data = post.author
     form.slug.data = post.slug
     form.content.data = post.content
     return render_template('edit_post.html', form=form)
-
-class Users(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False, unique=True)
-    favorite_color = db.Column(db.String(120))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    password_hash = db.Column(db.String(255))
-
-    @property
-    def password(self):
-        raise AttributeError('Password is not readable!')
-    
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return '<Name %r>' % self.name
-    
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -209,7 +176,7 @@ def get_name():
 def update(id):
     form = UserForm()
     name_to_update = Users.query.get_or_404(id)
-    all_users = Users.query.order_by(Users.date_added)
+    #all_users = Users.query.order_by(Users.date_added)
     if request.method == 'POST':
         name_to_update.name = request.form['name']
         name_to_update.username = request.form['username']
@@ -218,13 +185,14 @@ def update(id):
         try:
             db.session.commit()
             flash('User Updated Successfully!')
-            return render_template('dashboard.html', form=form, name_to_update=name_to_update, all_users=all_users, id=id)
+            return render_template('dashboard.html', form=form, name_to_update=name_to_update, id=id)
         except:
             db.session.commit()
             flash('Error!')
             return render_template('update.html', form=form, name_to_update=name_to_update)
     else:
-        return render_template('update.html', form=form, name_to_update=name_to_update, all_users=all_users, id=id)
+        #return render_template('update.html', form=form, name_to_update=name_to_update, all_users=all_users, id=id)
+        return render_template('update.html', form=form, name_to_update=name_to_update, id=id)
     
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
@@ -271,3 +239,39 @@ def get_current_date():
     }
    # return {'Date' : date.today()}
     return name_color
+
+
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    #author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    slug = db.Column(db.String(255))
+    #FOREIGN KEY
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class Users(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    favorite_color = db.Column(db.String(120))
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    password_hash = db.Column(db.String(255))
+    # USER CAN HAVE MANY POSTS 
+    posts = db.relationship('Posts', backref='user')
+
+    @property
+    def password(self):
+        raise AttributeError('Password is not readable!')
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return '<Name %r>' % self.name

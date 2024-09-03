@@ -13,7 +13,7 @@
 
                 <div class="shadow p-3 mb-5 bg-body rounded">
                     <h2>{{ post.title }}</h2></br>
-                    <strong>By: {{ post.author }}</strong></br>
+                    <strong>By: {{ post.user.username }}</strong></br>
                     {{ post.slug }} | {{ post.date_posted }}</br>
                     {{ post.content }}</br></br>
                     <a href="{{url_for('posts')}}" class="btn btn-outline-secondary btn-sm">All Posts</a>
