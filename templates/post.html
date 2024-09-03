@@ -17,8 +17,10 @@
                     {{ post.slug }} | {{ post.date_posted }}</br>
                     {{ post.content }}</br></br>
                     <a href="{{url_for('posts')}}" class="btn btn-outline-secondary btn-sm">All Posts</a>
-                    <a href="{{url_for('edit_post', id=post.id)}}" class="btn btn-outline-secondary btn-sm">Edit Post</a>
-                    <a href="{{url_for('delete_post', id=post.id)}}" class="btn btn-outline-danger btn-sm">Delete Post</a>
+                    {% if post.user_id == current_user.id %}
+                        <a href="{{url_for('edit_post', id=post.id)}}" class="btn btn-outline-secondary btn-sm">Edit Post</a>
+                        <a href="{{url_for('delete_post', id=post.id)}}" class="btn btn-outline-danger btn-sm">Delete Post</a>
+                    {% endif %}
                 </div>
                 </br>
             
