@@ -17,7 +17,7 @@
                     <!-- <strong>By: {{ post.author }}</strong></br> -->
                     <strong>By: {{ post.user.username }}</strong></br>
                     {{ post.slug }} | {{ post.date_posted }}</br>
-                    {{ post.content }}</br></br>
+                    {{ post.content|safe }}</br></br>
                     <a href="{{url_for('post', id=post.id)}}" class="btn btn-outline-secondary btn-sm">View Post</a>
 
                     {% if post.user.id == current_user.id %}
