@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from forms import PostForm, UserForm, NamerForm, PasswordForm, LoginForm
+from forms import PostForm, UserForm, NamerForm, PasswordForm, LoginForm, SearchForm
 
 app = Flask(__name__)
 
@@ -250,6 +250,21 @@ def get_current_date():
     }
    # return {'Date' : date.today()}
     return name_color
+
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
+
+@app.route('/search', methods=['POST'])
+def search():
+    form = SearchForm()
+    posts =Posts.query
+    if form.validate_on_submit():
+        post.search = form.search.data
+        posts = posts.filter(Posts.content.like('%'+post.search+'%'))
+        posts = posts.order_by(Posts.title).all()
+    return render_template('search.html', form=form, search=post.search, posts=posts)
 
 
 class Posts(db.Model):
