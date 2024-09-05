@@ -25,7 +25,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('posts')}}">Posts</a>
           </li>
-
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="{{url_for('admin')}}">Admin</a>
+          </li> -->
           {% if current_user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
@@ -33,6 +35,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('dashboard')}}">Dashboard</a>
               </li>
+              {% if current_user.id == 15 %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{url_for('admin')}}">Admin</a>
+                </li>
+              {% endif %}
           {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('login')}}">Login</a>

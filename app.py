@@ -268,6 +268,16 @@ def search():
         posts = posts.order_by(Posts.title).all()
     return render_template('search.html', form=form, search=post.search, posts=posts)
 
+@app.route('/admin')
+@login_required
+def admin():
+    id = current_user.id
+    if id == 15:
+        return render_template('admin.html')
+    else:
+        flash('You must be admin to access this page!')
+        return redirect(url_for('dashboard'))
+
 
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
