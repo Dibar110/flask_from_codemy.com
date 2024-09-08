@@ -17,7 +17,10 @@
                     <!-- <strong>By: {{ post.author }}</strong></br> -->
                     <strong>By: {{ post.user.username }}</strong></br>
                     {{ post.slug }} | {{ post.date_posted }}</br>
-                    {{ post.content|safe }}</br></br>
+                    {{ post.content|safe }}</br>
+                    {% if post.user.about_author %}
+                        {{post.user.about_author}}</br></br>
+                    {% endif %}
                     <a href="{{url_for('post', id=post.id)}}" class="btn btn-outline-secondary btn-sm">View Post</a>
 
                     {% if post.user.id == current_user.id %}

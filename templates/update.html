@@ -9,7 +9,7 @@
         {% if id == current_user.id %}
             <br/>
             <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-                <form action="/update/{{name_to_update.id}}" method="POST">
+                <form action="/update/{{name_to_update.id}}" method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     {{ form.name.label(class='form-label') }}
                     {{ form.name(class='form-control', value=name_to_update.name) }}
@@ -19,6 +19,11 @@
                     {{ form.email(class='form-control', value=name_to_update.email) }}
                     {{ form.favorite_color.label(class='form-label') }}
                     {{ form.favorite_color(class='form-control', value=name_to_update.favorite_color) }}
+                    {{ form.about_author.label(class='form-label') }}
+                    <!-- {{ form.about_author(class='form-control', value=name_to_update.about_author) }} -->
+                    <textarea name="about_author" class="form-control" id="">{{name_to_update.about_author}}</textarea>
+                    {{ form.profile_picture.label(class='form-label') }}
+                    {{ form.profile_picture(class='form-control', value=name_to_update.profile_picture) }}
                     <br/>
                     {{ form.submit(class='btn btn-primary') }} 
                     <a href="{{url_for('delete', id=id)}}" class="btn btn-danger">Delete</a>

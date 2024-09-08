@@ -7,9 +7,15 @@ from datetime import date
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from forms import PostForm, UserForm, NamerForm, PasswordForm, LoginForm, SearchForm
 from flask_ckeditor import CKEditor
+from werkzeug.utils import secure_filename
+import uuid as uuid
+import os
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
+
+UPLOAD_FOLDER = 'static/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = 'secretkey'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -195,6 +201,14 @@ def update(id):
         name_to_update.username = request.form['username']
         name_to_update.email = request.form['email']
         name_to_update.favorite_color = request.form['favorite_color']
+        name_to_update.about_author = request.form['about_author']
+        name_to_update.profile_picture = request.files['profile_picture']
+        
+        picture_filename = secure_filename(name_to_update.profile_picture.filename)
+        picture_unic_name = str(uuid.uuid1()) + "_" + picture_filename
+        # name_to_update.profile_picture.save(os.path.join(app.config['UPLOAD_FOLDER']), picture_unic_name)
+        name_to_update.profile_picture = picture_unic_name
+        
         try:
             db.session.commit()
             flash('User Updated Successfully!')
@@ -295,7 +309,9 @@ class Users(db.Model, UserMixin):
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     favorite_color = db.Column(db.String(120))
+    about_author = db.Column(db.Text(1000), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    profile_picture = db.Column(db.String(255), nullable=True)
     password_hash = db.Column(db.String(255))
     # USER CAN HAVE MANY POSTS 
     posts = db.relationship('Posts', backref='user')

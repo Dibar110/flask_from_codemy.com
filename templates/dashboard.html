@@ -15,31 +15,31 @@
             {{ current_user.name }}
         </div>
         <div class="card-body">
-          <h5 class="card-title">Welcome to your dashboard!</h5>
-          <p class="card-text"><strong>Name: </strong>{{ current_user.name }}<br>
-            <strong>Username: </strong>{{ current_user.username }}<br>
-            <strong>Id: </strong>{{ current_user.id }}<br>
-            <strong>Email: </strong>{{ current_user.email }}<br>
-            <strong>Favorite color: </strong>{{ current_user.favorite_color }}<br>
-            <strong>Date joined: </strong>{{ current_user.date_added }}<br>
-         </p>
-          <a href="{{url_for('logout')}}" class="btn btn-secondary btn-sm">Logout</a>
-          <a href="{{url_for('update', id=current_user.id)}}" class="btn btn-secondary btn-sm">Update Profile</a>
-          <a href="{{url_for('delete', id=current_user.id)}}" class="btn btn-danger btn-sm">Delete</a>
+          <div class="container">
+              <div class="row">
+                  <div class="col-8">
+                    <h5 class="card-title">Welcome to your dashboard!</h5>
+                    <p class="card-text"><strong>Name: </strong>{{ current_user.name }}<br>
+                      <strong>Username: </strong>{{ current_user.username }}<br>
+                      <strong>Id: </strong>{{ current_user.id }}<br>
+                      <strong>Email: </strong>{{ current_user.email }}<br>
+                      <strong>Favorite color: </strong>{{ current_user.favorite_color }}<br>
+                      <strong>Date joined: </strong>{{ current_user.date_added }}<br>
+                      <strong>About author: </strong>{{ current_user.about_author }}<br>
+                      <strong>Profile picture: </strong>{{ current_user.profile_picture }}<br>
+                    </p>
+                      <a href="{{url_for('logout')}}" class="btn btn-secondary btn-sm">Logout</a>
+                      <a href="{{url_for('update', id=current_user.id)}}" class="btn btn-secondary btn-sm">Update Profile</a>
+                      <a href="{{url_for('delete', id=current_user.id)}}" class="btn btn-danger btn-sm">Delete</a>
+                  </div>
+                  <div class="col-4">
+                      <img src="{{ url_for('static', filename='images/pic2.png') }}" alt="" align="right">
+                  </div>
+              </div>
+          </div>
+          
+          
         </div>
       </div>
-    <br>
-    <!-- <div class="shadow p-3 mb-5 bg-body-tertiary rounded"> -->
-        <!-- <h1>Dashboard</h1> -->
-        <!-- <h3>You are logged in!</h3> -->
-         <!-- <br/>
-         <strong>Name: </strong>{{ current_user.name }}<br>
-         <strong>Username: </strong>{{ current_user.username }}<br>
-         <strong>Email: </strong>{{ current_user.email }}<br>
-         <strong>Favorite color: </strong>{{ current_user.favorite_color }}<br>
-         <strong>Date joined: </strong>{{ current_user.date_added }}<br> -->
-         
-        <!-- <a href="{{url_for('logout')}}">Logout</a> -->
-    <!-- </div> -->
 
 {% endblock %}
