@@ -203,14 +203,15 @@ def update(id):
         name_to_update.favorite_color = request.form['favorite_color']
         name_to_update.about_author = request.form['about_author']
         name_to_update.profile_picture = request.files['profile_picture']
-        
         picture_filename = secure_filename(name_to_update.profile_picture.filename)
         picture_unic_name = str(uuid.uuid1()) + "_" + picture_filename
-        # name_to_update.profile_picture.save(os.path.join(app.config['UPLOAD_FOLDER']), picture_unic_name)
+        saver = request.files['profile_picture']
+        
         name_to_update.profile_picture = picture_unic_name
         
         try:
             db.session.commit()
+            saver.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_unic_name))
             flash('User Updated Successfully!')
             return render_template('dashboard.html', form=form, name_to_update=name_to_update, id=id)
         except:
@@ -222,18 +223,23 @@ def update(id):
         return render_template('update.html', form=form, name_to_update=name_to_update, id=id)
     
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete(id):
-    user_to_delete = Users.query.get_or_404(id)
-    name = None
-    form = UserForm()
-    try:
-        db.session.delete(user_to_delete)
-        db.session.commit()
-        all_users = Users.query.order_by(Users.date_added)
-        return render_template('add_user.html', form=form, name=name, all_users=all_users)
-    except:
-        flash("Error to delete user.")
-        return render_template('add_user.html', form=form, name=name, all_users=all_users)
+    if id == current_user.id:
+        user_to_delete = Users.query.get_or_404(id)
+        name = None
+        form = UserForm()
+        try:
+            db.session.delete(user_to_delete)
+            db.session.commit()
+            all_users = Users.query.order_by(Users.date_added)
+            return render_template('add_user.html', form=form, name=name, all_users=all_users)
+        except:
+            flash("Error to delete user.")
+            return render_template('add_user.html', form=form, name=name, all_users=all_users)
+    else:
+        flash("You can't delete this user!")
+        return redirect(url_for('dashboard'))
     
 @app.route('/test_password', methods=['GET', 'POST'])
 def test_password():
